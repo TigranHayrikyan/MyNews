@@ -22,4 +22,9 @@
         android:name="com.project.mynews.ui.fragments.account.AccountFragment"
         android:label="@string/title_account"
         tools:layout="@layout/fragment_account" />
+
+    <fragment
+        android:id="@+id/newsDetailFragment"
+        android:name="com.project.mynews.ui.fragments.newsDetail.NewsDetailFragment"
+        android:label="NewsDetailFragment" />
 </navigation>

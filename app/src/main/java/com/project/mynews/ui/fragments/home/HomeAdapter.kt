@@ -1,16 +1,28 @@
 package com.project.mynews.ui.fragments.home
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.core.graphics.drawable.toDrawable
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.project.mynews.R
 import com.project.mynews.data.model.NewsItem
 
-class HomeAdapter(private val newsList: List<NewsItem>) :
-    RecyclerView.Adapter<HomeAdapter.NewsViewHolder>() {
+class HomeAdapter(
+    private val context: Context,
+    private val newsList: List<NewsItem>,
+    private val listener: OnItemClickListener
+) : RecyclerView.Adapter<HomeAdapter.NewsViewHolder>() {
+
+    interface OnItemClickListener {
+        fun onItemClick(newsItem: NewsItem)
+    }
 
     inner class NewsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val titleTextView: TextView = view.findViewById(R.id.title)
@@ -23,7 +35,7 @@ class HomeAdapter(private val newsList: List<NewsItem>) :
             titleTextView.text = newsItem.title
             descriptionTextView.text = newsItem.description
             authorTextView.text = newsItem.author
-            mainFrame.setBackgroundDrawable(newsItem.image)
+            mainFrame.setBackgroundDrawable(newsItem.image?.toDrawable(context.resources))
         }
     }
 
@@ -34,6 +46,9 @@ class HomeAdapter(private val newsList: List<NewsItem>) :
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
         holder.bind(newsList[position])
+        holder.itemView.setOnClickListener {
+            listener.onItemClick(newsList[position])
+        }
     }
 
     override fun getItemCount(): Int = newsList.size

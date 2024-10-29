@@ -12,7 +12,7 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     suspend fun getLatestNews(): List<NewsItem> {
-        return newsRepository.getLast6MonthsNews()
+        return newsRepository.getLastNews()
     }
 
 }

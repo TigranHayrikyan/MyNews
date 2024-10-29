@@ -2,8 +2,9 @@ package com.project.mynews.data.repository
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.Drawable
+import android.graphics.Bitmap
 import android.util.Log
+import androidx.core.graphics.drawable.toBitmap
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -24,9 +25,9 @@ class NewsRepository @Inject constructor(
     private val networkService: NetworkService,
 ) {
     @SuppressLint("UseCompatLoadingForDrawables")
-    suspend fun getLast6MonthsNews(): List<NewsItem> {
+    suspend fun getLastNews(): List<NewsItem> {
         val listOfNews = mutableListOf<NewsItem>()
-        val lastNews = networkService.getLast6MonthsNews()
+        val lastNews = networkService.getLastNews()
         Log.d("TAG", "getLast6MonthsNews: $lastNews")
         lastNews.body().let { body ->
             body?.articles.let { articles ->
@@ -37,7 +38,9 @@ class NewsRepository @Inject constructor(
                         description = article.description ?: "",
                         link = article.url ?: "",
                         image = getImage(context = context, article.urlToImage ?: "")
-                            ?: context.getDrawable(R.drawable.item_background),
+                            ?: context.getDrawable(R.drawable.item_background)?.toBitmap(),
+                        publishedAt = article.publishedAt ?: "",
+                        content = article.content ?: ""
                     )
                     Log.d("TAG", "getLast6MonthsNews: $newsItem")
                     listOfNews.add(newsItem)
@@ -47,15 +50,15 @@ class NewsRepository @Inject constructor(
         return listOfNews
     }
 
-    private suspend fun getImage(context: Context, iconUrl: String): Drawable? {
+    private suspend fun getImage(context: Context, iconUrl: String): Bitmap? {
         return withContext(networkDispatcher) {
             try {
                 Glide.with(context)
-                    .asDrawable()
+                    .asBitmap()
                     .load(iconUrl)
+                    .apply(RequestOptions.bitmapTransform(RoundedCorners(30)))
                     .submit()
                     .get()
-                    .apply { RequestOptions.bitmapTransform(RoundedCorners(30)) }
             } catch (e: ExecutionException) {
                 Log.e("TAG", "getAppIcon: ${e.message}")
                 null
@@ -65,6 +68,4 @@ class NewsRepository @Inject constructor(
             }
         }
     }
-
-    suspend fun getTechCrunchNews() = networkService.getTechCrunchNews()
 }
