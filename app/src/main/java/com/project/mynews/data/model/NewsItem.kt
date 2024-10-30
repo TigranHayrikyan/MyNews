@@ -11,6 +11,7 @@ data class NewsItem(
     val description: String?,
     val link: String?,
     val image: Bitmap?,
+    val imageUrl: String?,
     val publishedAt: String?,
     val content: String?
 ) : Parcelable

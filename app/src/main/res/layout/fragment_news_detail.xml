@@ -44,7 +44,7 @@
                 android:layout_width="380dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="80dp"
+                android:layout_marginTop="100dp"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
@@ -52,11 +52,12 @@
     </LinearLayout>
 
     <FrameLayout
+        android:id="@+id/cardView"
         android:layout_width="280dp"
         android:layout_height="150dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="260dp"
-        android:background="@drawable/card_background"
+        android:background="@drawable/primary_gradient"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -98,7 +99,25 @@
                 android:textStyle="bold" />
 
         </LinearLayout>
-
-
     </FrameLayout>
+
+    <ImageButton
+        android:id="@+id/backBtn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/primary_gradient"
+        android:src="@drawable/ic_arrow_back_ios_new_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/saveBtn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/is_save_24"
+        android:background="@drawable/primary_gradient"
+        android:layout_margin="40dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

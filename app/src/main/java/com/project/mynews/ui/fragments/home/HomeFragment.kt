@@ -27,6 +27,7 @@ class HomeFragment : Fragment(), HomeAdapter.OnItemClickListener {
     private lateinit var homeAdapter: HomeAdapter
     private var latestNews = emptyList<NewsItem>()
     private val binding get() = _binding!!
+    private val viewModel by viewModels<HomeViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,15 +35,20 @@ class HomeFragment : Fragment(), HomeAdapter.OnItemClickListener {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+
+        initContent()
+
+        return binding.root
+    }
+
+    private fun initContent() {
         binding.homeRecyclerView.layoutManager = LinearLayoutManager(context)
-        val viewModel by viewModels<HomeViewModel>()
         lifecycleScope.launch(Dispatchers.Main) {
             latestNews = viewModel.getLatestNews()
-            homeAdapter = HomeAdapter(requireContext().applicationContext, latestNews, this@HomeFragment)
+            homeAdapter =
+                HomeAdapter(requireContext().applicationContext, latestNews, this@HomeFragment)
             binding.homeRecyclerView.adapter = homeAdapter
         }
-        return root
     }
 
     override fun onDestroyView() {

@@ -42,5 +42,5 @@
         android:layout_margin="10dp"
         android:text="This is description of article"
         android:textColor="@color/white"
-        android:textSize="10sp" />
+        android:textSize="11sp" />
 </FrameLayout>

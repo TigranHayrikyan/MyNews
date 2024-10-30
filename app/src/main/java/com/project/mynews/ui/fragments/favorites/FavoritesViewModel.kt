@@ -1,13 +1,18 @@
 package com.project.mynews.ui.fragments.favorites
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.project.mynews.data.model.NewsItem
+import com.project.mynews.data.repository.LocalNewsRepository
+import com.project.mynews.data.repository.RemoteNewsRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class FavoritesViewModel : ViewModel() {
+@HiltViewModel
+class FavoritesViewModel @Inject constructor(
+    private val localNewsRepository: LocalNewsRepository,
+) : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is dashboard Fragment"
+    suspend fun getAllNews(): List<NewsItem> {
+        return localNewsRepository.getAllNews()
     }
-    val text: LiveData<String> = _text
 }

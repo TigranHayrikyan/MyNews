@@ -4,37 +4,59 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.project.mynews.R
+import com.project.mynews.data.model.NewsItem
 import com.project.mynews.databinding.FragmentFavoritesBinding
+import com.project.mynews.ui.fragments.home.HomeAdapter
+import com.project.mynews.ui.fragments.newsDetail.NewsDetailFragment
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class FavoritesFragment : Fragment() {
+@AndroidEntryPoint
+class FavoritesFragment : Fragment(), FavoritesAdapter.OnItemClickListener {
 
     private var _binding: FragmentFavoritesBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var favoritesAdapter: FavoritesAdapter
+    private val viewModel by viewModels<FavoritesViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val favoritesViewModel = ViewModelProvider(this)[FavoritesViewModel::class.java]
         _binding = FragmentFavoritesBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
-        favoritesViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+        initContent()
+
+        return binding.root
     }
+
+    private fun initContent() {
+        binding.favoritesRecyclerView.layoutManager = LinearLayoutManager(context)
+        lifecycleScope.launch(Dispatchers.Main) {
+            favoritesAdapter = FavoritesAdapter(requireContext().applicationContext, viewModel.getAllNews(), this@FavoritesFragment)
+            binding.favoritesRecyclerView.adapter = favoritesAdapter
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onItemClick(newsItem: NewsItem) {
+        findNavController().navigate(
+            R.id.newsDetailFragment,
+            bundleOf(NewsDetailFragment.ARG_ITEM_ID to newsItem)
+        )
     }
 }
