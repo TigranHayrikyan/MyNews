@@ -1,7 +1,6 @@
 package com.project.mynews.data.repository
 
 import android.content.Context
-import android.util.Log
 import androidx.core.graphics.drawable.toBitmap
 import com.project.mynews.R
 import com.project.mynews.data.db.NewsItemDao
@@ -18,6 +17,11 @@ class LocalNewsRepository @Inject constructor(
     @NetworkDispatcher private val networkDispatcher: CoroutineDispatcher,
     private val newsItemDao: NewsItemDao,
 ) {
+
+    suspend fun isNewsExists(publishedAt: String): Boolean {
+        return newsItemDao.isNewsExists(publishedAt)
+    }
+
     suspend fun insertNews(newsItemEntity: NewsItemEntity) {
         newsItemDao.insert(newsItemEntity)
     }
@@ -44,5 +48,9 @@ class LocalNewsRepository @Inject constructor(
 
     suspend fun deleteAll() {
         newsItemDao.deleteAll()
+    }
+
+    suspend fun deleteNews(link: String) {
+        newsItemDao.deleteNews(link)
     }
 }

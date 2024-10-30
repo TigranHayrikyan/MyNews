@@ -52,7 +52,13 @@ class NewsDetailFragment : Fragment() {
 
         binding.saveBtn.setOnClickListener {
             lifecycleScope.launch {
-                viewModel.insertNews(newsItem!!)
+                newsItem?.let { news ->
+                    if (viewModel.isNewsExists(news.publishedAt)) {
+                        news.publishedAt?.let { publishedAt -> viewModel.deleteNews(publishedAt) }
+                    } else {
+                        viewModel.insertNews(news)
+                    }
+                }
             }
         }
     }

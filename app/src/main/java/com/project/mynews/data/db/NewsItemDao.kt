@@ -16,6 +16,10 @@ interface NewsItemDao {
     @Query("DELETE FROM news_items")
     suspend fun deleteAll()
 
-    @Query("DELETE FROM news_items WHERE id = :id")
-    suspend fun delete(id: Long)
+    @Query("DELETE FROM news_items WHERE publishedAt = :publishedAt")
+    suspend fun deleteNews(publishedAt: String)
+
+    @Query("SELECT EXISTS(SELECT * FROM news_items WHERE publishedAt = :publishedAt)")
+    suspend fun isNewsExists(publishedAt: String): Boolean
+
 }
